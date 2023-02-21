@@ -11,12 +11,12 @@
 
 - name: "Ubuntu - creating httpd conf file from template"
   template:
-    src: "./httpd.conf.j2"
+    src: "./templates/httpd.conf.j2"
     dest: "/etc/apache2/sites-available/apache2.conf"
 
 - name: "Ubuntu - creating virtualhost from template"
   template:
-    src: "./virtualhost.conf.j2"
+    src: "./templates/virtualhost.conf.j2"
     dest: "/etc/apache2/sites-available/{{ httpd_domain }}.conf"
     owner: "{{ httpd_owner }}"
     group: "{{ httpd_group }}"
@@ -100,7 +100,7 @@
  
 - name: "Ubuntu - creating wp-config file from template"
   template:
-    src: "./wp-config.php.j2"
+    src: "./templates/wp-config.php.j2"
     dest: "/var/www/html/{{ httpd_domain }}/wp-config.php"
     owner: "{{ httpd_owner }}"
     group: "{{ httpd_group }}"
