@@ -1,4 +1,4 @@
-- name: "Launching WordPress website in LAMP Stack"
+- name: "Launching WordPress Website on LAMP Stack"
   become: yes
   hosts: amazon,ubuntu
   tasks:
