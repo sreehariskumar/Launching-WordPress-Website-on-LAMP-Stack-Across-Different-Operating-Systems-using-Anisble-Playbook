@@ -21,4 +21,4 @@ So, whether you’re a developer, a system administrator, or a DevOps engineer, 
 
 
 ### The purpose and method of operation are well explained in my Medium [article](https://medium.com/@ssksreehari/launching-a-wordpress-website-on-lamp-stack-using-anisble-playbook-across-different-operating-2ef025cfd90c).
-Please take a look.
+### Kindly take a look.
