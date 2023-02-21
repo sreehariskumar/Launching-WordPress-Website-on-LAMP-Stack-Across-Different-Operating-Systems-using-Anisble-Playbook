@@ -20,5 +20,5 @@ By the end of this article, you will have a clear understanding of how to create
 So, whether you’re a developer, a system administrator, or a DevOps engineer, this article is a must-read if you want to simplify your WordPress website deployment process on a LAMP stack across different operating systems.
 
 
-The purpose and method of operation are well explained in my Medium [article](https://medium.com/@ssksreehari/launching-a-wordpress-website-on-lamp-stack-using-anisble-playbook-across-different-operating-2ef025cfd90c).
+### The purpose and method of operation are well explained in my Medium [article](https://medium.com/@ssksreehari/launching-a-wordpress-website-on-lamp-stack-using-anisble-playbook-across-different-operating-2ef025cfd90c).
 Please take a look.
