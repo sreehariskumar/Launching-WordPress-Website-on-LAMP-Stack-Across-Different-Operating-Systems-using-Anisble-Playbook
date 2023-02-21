@@ -1,0 +1,123 @@
+---
+
+- name: "Ubuntu - installing httpd"
+  apt:
+    update_cache: true
+    name: 
+      - apache2
+      - php
+      - libapache2-mod-php
+    state: present
+
+- name: "Ubuntu - creating httpd conf file from template"
+  template:
+    src: "./httpd.conf.j2"
+    dest: "/etc/apache2/sites-available/apache2.conf"
+
+- name: "Ubuntu - creating virtualhost from template"
+  template:
+    src: "./virtualhost.conf.j2"
+    dest: "/etc/apache2/sites-available/{{ httpd_domain }}.conf"
+    owner: "{{ httpd_owner }}"
+    group: "{{ httpd_group }}"
+ 
+- name: "Ubuntu - enabling wp site"
+  shell: a2ensite {{ httpd_domain }}.conf     
+ 
+- name: "Ubuntu - disabling default site"
+  shell: a2dissite 000-default.conf 
+ 
+- name: "Ubuntu - creating document root"
+  file:
+    path: "/var/www/html/{{ httpd_domain }}"
+    state: directory
+    owner: "{{ httpd_owner }}"
+    group: "{{ httpd_group }}"
+ 
+- name: "Ubuntu - installing package"
+  apt:
+    name:
+      - mysql-server
+      - php-mysql
+      - python3-pymysql
+    state: present
+ 
+- name: "Ubuntu - restarting & enabling service"
+  service:
+    name: mysql
+    state: restarted
+    enabled: true
+ 
+- name: "Ubuntu - Set the root password"
+  ignore_errors: true
+  mysql_user:
+    name: root
+    password: "{{ mariadb_root_pass }}"
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+ 
+- name: "Ubuntu - remove all anonymous user accounts"
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+    login_user: root
+    login_password: "{{ mariadb_root_pass }}"
+ 
+- name: "Ubuntu - creates database for WordPress"
+  mysql_db:
+    name: "{{ mariadb_extra_db }}"
+    state: present
+    login_user: root
+    login_password: "{{ mariadb_root_pass }}"
+ 
+- name: "Ubuntu - creating users"
+  mysql_user:
+    name: "{{ mariadb_extra_user }}"
+    password: "{{ mariadb_extra_pass }}"
+    priv: "{{ mariadb_extra_db }}.*:ALL"
+    state: present
+    login_user: root
+    login_password: "{{ mariadb_root_pass }}"
+ 
+- name: "Ubuntu - downloading wp archive"
+  get_url:
+    url: "{{ wp_url }}"
+    dest: "/tmp/wordpress.tar.gz"
+ 
+- name: "Ubuntu - extracting wp archive"
+  unarchive:
+    src: "/tmp/wordpress.tar.gz"
+    dest: "/tmp/"
+    remote_src: true
+ 
+- name: "Ubuntu - copying wp files"
+  copy: 
+    src: "/tmp/wordpress/"
+    dest: "/var/www/html/{{ httpd_domain }}/"
+    remote_src: true
+    owner: "{{ httpd_owner }}"
+    group: "{{ httpd_group }}"
+ 
+- name: "Ubuntu - creating wp-config file from template"
+  template:
+    src: "./wp-config.php.j2"
+    dest: "/var/www/html/{{ httpd_domain }}/wp-config.php"
+    owner: "{{ httpd_owner }}"
+    group: "{{ httpd_group }}"
+ 
+- name: "Post Installation - restarting services"
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: true
+  with_items: 
+    - apache2
+    - mysql
+ 
+- name: "Post Installation - cleanup"
+  file:
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - "/tmp/wordpress/"
+    - "/tmp/wordpress.tar.gz"

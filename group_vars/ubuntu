@@ -1,0 +1,11 @@
+---
+
+httpd_owner: "www-data"
+httpd_group: "www-data"
+httpd_domain: "wp.1by2.online"
+httpd_port: "80"
+mariadb_root_pass: "admin123"
+mariadb_extra_user: "wp_user"
+mariadb_extra_pass: "wp_user_pass"
+mariadb_extra_db: "wp_db"
+wp_url: "https://wordpress.org/wordpress-6.0.3.tar.gz"
