@@ -1,0 +1,10 @@
+- name: "Launching WordPress website in LAMP Stack"
+  become: yes
+  hosts: amazon,ubuntu
+  tasks:
+ 
+    - include_tasks: ./tasks/amazon-tasks.yml
+      when: ansible_distribution ==  "Amazon" and ansible_os_family == "RedHat"
+ 
+    - include_tasks: ./tasks/ubuntu-tasks.yml
+      when: ansible_distribution ==  "Ubuntu" and ansible_os_family == "Debian"
